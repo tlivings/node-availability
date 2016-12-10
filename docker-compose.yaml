@@ -1,0 +1,17 @@
+nginx:
+    build: ./nginx
+    links:
+        - node1:node1
+        - node2:node2
+    ports:
+        - "8000:8000"
+node1:
+    build: ./node
+    ports:
+        - "3000"
+    restart: always
+node2:
+    build: ./node
+    ports:
+        - "3000"
+    restart: always
