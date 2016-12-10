@@ -7,6 +7,7 @@ let closing = false;
 
 const server = Http.createServer((req, res) => {
     if (closing) {
+        console.log('SERVER IS SHUTTING DOWN');
         res.writeHead(503);
         res.end();
         return;
@@ -19,9 +20,13 @@ const server = Http.createServer((req, res) => {
 
     d.on('error', (error) => {
         closing = true;
-        res.writeHead(500);
+        res.writeHead(200);
         res.end();
-        server.close();
+        console.log('UNCAUGHT: SHUTTING DOWN SERVER');
+        server.close(() => {
+            console.log('PROCESS EXIT');
+            process.exit(1);
+        });
     });
 
     d.run(() => {
@@ -34,4 +39,6 @@ const server = Http.createServer((req, res) => {
     });
 });
 
-server.listen(3000);
+server.listen(3000, () => {
+    console.log('Server up.');
+});
