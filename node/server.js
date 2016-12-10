@@ -24,12 +24,14 @@ const server = Http.createServer((req, res) => {
         server.close();
     });
 
-    if ((Math.floor(Math.random() * 100) + 1) < 5) {
-        throw new Error('Boom!');
-    }
+    d.run(() => {
+        if ((Math.floor(Math.random() * 200) + 1) < 2) {
+            throw new Error('Boom!');
+        }
 
-    res.writeHead(200);
-    res.end('OK');
+        res.writeHead(200);
+        res.end('OK');
+    });
 });
 
 server.listen(3000);
