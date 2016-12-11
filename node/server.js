@@ -3,42 +3,49 @@
 const Http = require('http');
 const Domain = require('domain');
 
-let closing = false;
+const handler = function () {
+    let closing = false;
 
-const server = Http.createServer((req, res) => {
-    if (closing) {
-        console.log('SERVER IS SHUTTING DOWN');
-        res.writeHead(503);
-        res.end();
-        return;
-    };
+    return function (req, res) {
+        if (closing) {
+            console.log('WARN: Unable to handle request. Server is shutting down.');
+            res.writeHead(503);
+            res.end();
+            return;
+        };
 
-    const d = Domain.create();
+        const d = Domain.create();
 
-    d.add(req);
-    d.add(res);
+        d.add(req);
+        d.add(res);
 
-    d.on('error', (error) => {
-        closing = true;
-        res.writeHead(200);
-        res.end();
-        console.log('UNCAUGHT: SHUTTING DOWN SERVER');
-        server.close(() => {
-            console.log('PROCESS EXIT');
-            process.exit(1);
+        d.on('error', (error) => {
+            closing = true;
+
+            res.writeHead(500);
+            res.end('Internal Server Error');
+
+            console.log('ERROR: Uncaught Exception. Shutting down.');
+
+            server.close(() => {
+                console.log('INFO: Server closed. Exiting process.');
+                process.exit();
+            });
         });
-    });
 
-    d.run(() => {
-        if ((Math.floor(Math.random() * 200) + 1) < 2) {
-            throw new Error('Boom!');
-        }
+        d.run(() => {
+            if ((Math.floor(Math.random() * 200) + 1) < 2) {
+                throw new Error('Boom!');
+            }
 
-        res.writeHead(200);
-        res.end('OK');
-    });
-});
+            res.writeHead(200);
+            res.end('OK');
+        });
+    };
+};
+
+const server = Http.createServer(handler());
 
 server.listen(3000, () => {
-    console.log('Server up.');
+    console.log('INFO: Server listening.');
 });
