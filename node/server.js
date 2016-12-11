@@ -9,7 +9,7 @@ const handler = function () {
     return function (req, res) {
         if (closing) {
             console.log('WARN: Unable to handle request. Server is shutting down.');
-            res.writeHead(503);
+            res.writeHead(503, { Connection: 'close' });
             res.end();
             return;
         };
@@ -27,10 +27,7 @@ const handler = function () {
 
             console.log('ERROR: Uncaught Exception. Shutting down.');
 
-            server.close(() => {
-                console.log('INFO: Server closed. Exiting process.');
-                process.exit();
-            });
+            process.emit('SIGTERM');
         });
 
         d.run(() => {
@@ -43,6 +40,18 @@ const handler = function () {
         });
     };
 };
+
+process.on('SIGTERM', () => {
+    setTimeout(() => {
+        console.log('INFO: Forced shutdown.');
+        process.exit(1);
+    }, 30000).unref();
+
+    server.close(() => {
+        console.log('INFO: Server closed. Exiting process.');
+        process.exit();
+    });
+});
 
 const server = Http.createServer(handler());
 
