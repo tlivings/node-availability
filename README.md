@@ -8,10 +8,10 @@ This is an example of NGINX composed together with two node processes.
 
 This results in very high availability for the deployment.
 
-Node cluster with automatic restart of child
+*Node cluster with automatic restart of child*
 
 ![Cluster Alone](cluster_alone.png)
 
-NGINX load balancing and docker automatic restart of process
+*NGINX load balancing and docker automatic restart of process*
 
 ![NGINX Load Balancing](with_nginx.png)
