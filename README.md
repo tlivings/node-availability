@@ -12,6 +12,12 @@ This results in very high availability for the deployment.
 
 ### Examples
 
+Here are two scenarios compared:
+
+1. with node's `cluster` module handling load balancing among four
+node processes, and child processes restarting automatically when failed.
+2. with NGINX load balancing four standalone node processes and retrying next upstream on unavailable.
+
 500s represent instances where an `uncaughtException` was handled and returned a 500 to user (expected).
 When this occurs, the server will automatically 'gracefully' restart.
 
