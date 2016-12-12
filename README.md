@@ -12,6 +12,11 @@ This results in very high availability for the deployment.
 
 ### Examples
 
+500s represent instances where an `uncaughtException` was handled and returned a 500 to user (expected).
+When this occurs, the server will automatically 'gracefully' restart.
+
+We do not want to see anything other than 200 or 500, since this would indicated availability issues.
+
 *Node cluster with automatic restart of child*
 
 ![Cluster Alone](cluster_alone.png)
