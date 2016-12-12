@@ -3,6 +3,26 @@
 const Http = require('http');
 const Domain = require('domain');
 
+//Cluster code for stand-alone comparison
+// const Cluster = require('cluster');
+//
+// const fork = function () {
+//     const child = Cluster.fork();
+//
+//     child.once('exit', () => {
+//         console.log('WARN: Child process exited. Restarting.');
+//         fork();
+//     });
+// }
+//
+// if (Cluster.isMaster) {
+//     fork();
+//     fork();
+//     fork();
+//     fork();
+//     return;
+// }
+
 const handler = function () {
     let closing = false;
 
