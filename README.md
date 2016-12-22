@@ -10,6 +10,12 @@ This results in very high availability for the deployment.
 
 ---
 
+### The Node App
+
+The node application in this example uses domains to handle `uncaughtException` events. When such an error occurs, it will still crash the server, but gracefully — attempting to allow the inflight requests to complete.
+
+If a new request comes in while the server is shutting down, a 503 will be issued.
+
 ### Examples
 
 Here are two scenarios compared:
